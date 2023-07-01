@@ -101,6 +101,8 @@ class TxtCtrl(stc.StyledTextCtrl):
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwargs):
         wx.Frame.__init__(self, *args, **kwargs)
+        ico = wx.Icon('data/pixmaps/wxnote.ico', wx.BITMAP_TYPE_ICO)
+        self.SetIcon(ico)
         self.init_ui()
 
     def init_ui(self):
