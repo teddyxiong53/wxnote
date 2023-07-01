@@ -120,6 +120,33 @@ class MainFrame(wx.Frame):
 
     def new_file(self):
         self.show_notebook_if_not_shown()
+        page = TxtCtrl(self, text='', readonly=False)
+
+        self.pages.append(page)
+        page.SetUndoCollection(True)
+        page.SetBufferedDraw(True)
+        page.SetWrapMode(stc.STC_WRAP_WORD)
+
+        page.python_syntax = False
+        page.folding_symbols = False
+        page.line_numbers = False
+        page.word_wrap = True
+        page.path = ''
+        page.filename = 'New'
+        page.datetime = str(datetime.datetime.now())
+
+        page.SetMarginLeft(6)
+        page.SetMarginWidth(0, 0)
+        page.SetMarginWidth(1, 0)
+        page.SetMarginWidth(2, 0)
+
+        self.notebook.AddPage(
+            page=page,
+            text='New',
+            select=True
+        )
+        self.set_styles_default()
+        page.SetFocus()
 
     def new_file_event(self, event):
         if event.GetId() == wx.ID_NEW:
