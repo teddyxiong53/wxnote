@@ -3,7 +3,12 @@ import keyword
 import os
 import traceback
 
+import version
+import info
+
 import wx
+import wx.adv
+
 import gettext
 import wx.lib.agw.flatnotebook as fnb
 import wx.stc as stc
@@ -175,7 +180,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.save_file_event, id=wx.ID_SAVEAS)
         # Save all
         # TODO
-        self.file_menu.Append(wx.ID_SAVEAS, 'Save as', 'Save using a different name')
+        self.file_menu.Append(wx.ID_SAVEAS, 'Save all', 'Save all files')
         self.Bind(wx.EVT_MENU, self.save_file_event, id=wx.ID_SAVEAS)
         # Close
         self.file_menu.Append(wx.ID_CLOSE, 'Close', 'Close current file')
@@ -184,6 +189,28 @@ class MainFrame(wx.Frame):
         self.file_menu.Append(wx.ID_CLOSE_ALL, 'Close all', 'Close all file')
         self.Bind(wx.EVT_MENU, self.close_all_event, id=wx.ID_CLOSE_ALL)
 
+        # session
+        self.file_menu.AppendSeparator()
+        session_item_ids = {
+            "load_session": wx.NewIdRef(),
+            "save_session": wx.NewIdRef(),
+        }
+        self.file_menu.Append(session_item_ids['load_session'], 'Load session', 'Load session')
+        self.Bind(wx.EVT_MENU, self.load_session_event, session_item_ids['load_session'])
+
+        self.file_menu.Append(session_item_ids['save_session'], 'Save session', 'Save session')
+        self.Bind(wx.EVT_MENU, self.save_session_event, session_item_ids['save_session'])
+
+        # exit
+        self.file_menu.Append(wx.ID_EXIT, 'Exit', 'Exit')
+        self.Bind(wx.EVT_MENU, self.exit_event, id=wx.ID_EXIT)
+
+    def load_session_event(self,event):
+        print('load session')
+    def save_session_event(self,event):
+        print('save session')
+    def exit_event(self,event):
+        self.Close()
     def close_file_event(self, event):
         pass
     def close_all_event(self, event):
@@ -235,6 +262,18 @@ class MainFrame(wx.Frame):
     def add_help_menu(self):
         self.help_menu = wx.Menu()
         self.menubar.Append(self.help_menu, '&Help')
+        self.help_menu.Append(wx.ID_ABOUT, 'About', 'About WXNote')
+        self.Bind(wx.EVT_MENU, self.about_event, id=wx.ID_ABOUT)
+
+    def about_event(self, event):
+        dlg_info = wx.adv.AboutDialogInfo()
+        dlg_info.SetName(info.__appname__)
+        dlg_info.SetVersion(version.__version__)
+        dlg_info.SetDescription(info.__descriptionfull__)
+        dlg_info.SetWebSite(info.__projecturl__)
+        dlg_info.SetLicense(info.__licensefull__)
+        dlg_info.AddDeveloper(info.__author__)
+        wx.adv.AboutBox(dlg_info)
     def open_file_event(self, event):
         if event.GetId() == wx.ID_OPEN:
             self.open_file()
